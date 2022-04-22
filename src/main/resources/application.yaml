@@ -32,3 +32,8 @@ jasypt:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+
+app:
+ streamServerAdd: ${STREAM_SERVER_ADD:"103.87.128.78:8124"}
+ rtspServerAdd: ${RTSP_SERVER_ADD:"103.87.128.78:8554"}
+ rtspRunnerId: ${RTSP_RUNNER_ID:rtsp-runner-1}

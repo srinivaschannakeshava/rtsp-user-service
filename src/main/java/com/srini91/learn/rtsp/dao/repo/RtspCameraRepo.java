@@ -10,4 +10,5 @@ import com.srini91.learn.rtsp.dao.model.RtspCamera;
 @Repository
 public interface RtspCameraRepo extends JpaRepository<RtspCamera, UUID> {
 
+	public RtspCamera findOneByCameraId(String cameraId);
 }

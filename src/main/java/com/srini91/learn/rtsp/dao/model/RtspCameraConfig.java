@@ -14,6 +14,8 @@ import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.Data;
@@ -38,7 +40,9 @@ public class RtspCameraConfig implements Serializable {
 
 	@Lob
 	@Column(columnDefinition = "TEXT")
+	@Type(type = "org.hibernate.type.StringType")
 	private String config;
+	
 	
 
 }
