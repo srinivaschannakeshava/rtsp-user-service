@@ -66,6 +66,7 @@ public class JwtWebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(AuthenticationManagerBuilder authBuilder) throws Exception {
 		authBuilder.userDetailsService(rtspUserDetailService).passwordEncoder(bCryptPasswordEncoder);
+//		.passwordEncoder(bCryptPasswordEncoder);
 	}
 
 }

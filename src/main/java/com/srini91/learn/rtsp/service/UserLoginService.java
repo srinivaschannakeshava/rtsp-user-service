@@ -16,7 +16,7 @@ import com.srini91.learn.rtsp.model.UserDTO;
 
 @Service
 public class UserLoginService {
-	
+
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
@@ -25,8 +25,9 @@ public class UserLoginService {
 
 	@Transactional
 	public JwtResponse loginUser(UserDTO user) {
-		Authentication authentication = authenticationManager
-				.authenticate(new UsernamePasswordAuthenticationToken(user.getEmailId(), user.getPwd()));
+
+		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+				user.getEmailId(),user.getPwd()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = jwtUtils.generateToken(authentication);
 		RtspUserDetails userDetails = (RtspUserDetails) authentication.getPrincipal();

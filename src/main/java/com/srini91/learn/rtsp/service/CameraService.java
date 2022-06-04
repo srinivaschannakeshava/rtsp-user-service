@@ -5,6 +5,7 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.srini91.learn.rtsp.config.AppConfig;
@@ -17,6 +18,7 @@ import com.srini91.learn.rtsp.dao.repo.RtspCameraRepo;
 import com.srini91.learn.rtsp.dao.repo.RtspRunnerScheduleRepo;
 import com.srini91.learn.rtsp.dao.repo.RtspUserRepo;
 import com.srini91.learn.rtsp.model.CameraDTO;
+import com.srini91.learn.rtsp.model.UserDTO;
 
 @Service
 public class CameraService {
@@ -44,11 +46,15 @@ public class CameraService {
 		UUID userId = userDetails.getRtspUser().getId();
 		rtspCamera.setRtspUser(userRepo.getById(userId));
 //		http://103.87.128.78:8124/stream/live/admin/TapoC200
-		rtspCamera.setHttpPath(createHttpPath(userId.toString(), rtspCamera.getCameraId()));
-		rtspCamera.setServerRtspPath(createRtspPath(userId.toString(), rtspCamera.getCameraId()));
+		String userIdString = userId.toString();
+		String cameraId = rtspCamera.getCameraId();
+		rtspCamera.setHttpPath(createHttpPath(userIdString, cameraId));
+		rtspCamera.setServerRtspPath(createRtspPath(userIdString, cameraId));
+		rtspCamera.setAiRtspPath(createAiPath(userIdString, cameraId));
+		rtspCamera.setMotionRtspPath(createMotionPath(userIdString, cameraId));
 		RtspCamera rtspCameraDetails = rtspCameraRepo.save(rtspCamera);
-		if (cameraDetails.getIsRtspPull()) {
-			RtspRunnerSchedule rtspSchedule = RtspRunnerSchedule.builder().cameraId(rtspCamera.getCameraId())
+		if (Boolean.TRUE.equals(cameraDetails.getIsRtspPull())) {
+			RtspRunnerSchedule rtspSchedule = RtspRunnerSchedule.builder().cameraId(cameraId)
 					.cameraRstpPath(rtspCamera.getCameraRtspPath()).serverId(appProp.getRtspRunnerId())
 					.serverRtspPath(rtspCamera.getServerRtspPath()).build();
 			rtspRunSchRepo.save(rtspSchedule);
@@ -58,14 +64,22 @@ public class CameraService {
 	}
 
 	@Transactional
-	public void deleteCamera(String cameraId) {
-		RtspCamera rtspCamera = rtspCameraRepo.findOneByCameraId(cameraId);
-		if (null != rtspCamera) {
-			rtspCameraRepo.delete(rtspCamera);
-			if (rtspCamera.getIsRtspPull()) {
-				rtspRunSchRepo.deleteAllByCameraId(cameraId);
-			}
+	public void deleteCamera(String cameraId, UserDTO user) {
 
+		if (user != null) {
+			long count = user.getCameraList().stream().filter(c -> c.getCameraId().equalsIgnoreCase(cameraId)).count();
+			if (count != 0) {
+				RtspCamera rtspCamera = rtspCameraRepo.findOneByCameraId(cameraId);
+				if (null != rtspCamera) {
+					rtspCameraRepo.delete(rtspCamera);
+					if (Boolean.TRUE.equals(rtspCamera.getIsRtspPull())) {
+						rtspRunSchRepo.deleteAllByCameraId(cameraId);
+					}
+
+				}
+
+			}else
+				throw new UsernameNotFoundException("Camera ID not belongs to user");
 		}
 
 	}
@@ -77,5 +91,13 @@ public class CameraService {
 
 	private String createRtspPath(String userId, String cameraId) {
 		return "rtsp://" + appProp.getRtspServerAdd().replaceAll("\"", "") + "/" + userId + "/" + cameraId;
+	}
+
+	private String createAiPath(String userId, String cameraId) {
+		return "rtsp://" + appProp.getRtspServerAdd().replaceAll("\"", "") + "/" + userId + "/ai/" + cameraId;
+	}
+
+	private String createMotionPath(String userId, String cameraId) {
+		return "rtsp://" + appProp.getRtspServerAdd().replaceAll("\"", "") + "/" + userId + "/md/" + cameraId;
 	}
 }

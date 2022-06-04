@@ -13,6 +13,8 @@ public class BeanConfig {
 	}
 	
 	
+	
+	
 
 //	@Bean
 //	public DaoAuthenticationProvider authenticationProvider(RtspUserDetailService userDetailServ,

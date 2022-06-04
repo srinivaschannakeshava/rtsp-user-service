@@ -6,3 +6,6 @@ USER spring:spring
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} app.jar
 ENTRYPOINT ["java","-jar","-Djasypt.encryptor.password=s3cret","/app.jar"]
+
+
+#docker build -t srini91/rtsp-user-service:1.3-alpine .

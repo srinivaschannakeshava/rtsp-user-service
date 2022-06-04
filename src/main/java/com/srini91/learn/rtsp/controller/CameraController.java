@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.srini91.learn.rtsp.config.security.RtspUserDetails;
 import com.srini91.learn.rtsp.dao.model.RtspCamera;
 import com.srini91.learn.rtsp.model.CameraDTO;
+import com.srini91.learn.rtsp.model.UserDTO;
 import com.srini91.learn.rtsp.service.CameraService;
 
 
@@ -39,8 +40,9 @@ public class CameraController {
 	}
 	
 	@DeleteMapping(path = "/remove/{cameraId}")
-	public void removeCamera(@PathVariable String cameraId) {
-		cameraServ.deleteCamera(cameraId);
+	public void removeCamera(@PathVariable String cameraId,Principal pUser) {
+		UserDTO user = ((RtspUserDetails)((Authentication) pUser).getPrincipal()).getRtspUser();
+		cameraServ.deleteCamera(cameraId,user);
 	}
 	
 	

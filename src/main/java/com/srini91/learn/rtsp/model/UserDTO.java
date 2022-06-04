@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.srini91.learn.rtsp.dao.model.RtspCamera;
 import com.srini91.learn.rtsp.dao.model.Status;
 
@@ -16,6 +18,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(Include.NON_NULL)
 public class UserDTO implements Serializable {
 	/**
 	 * 
@@ -25,6 +28,8 @@ public class UserDTO implements Serializable {
 	private UUID id;
 	
 	private String pwd;
+	
+	private String newPwd;
 
 	private String username;
 

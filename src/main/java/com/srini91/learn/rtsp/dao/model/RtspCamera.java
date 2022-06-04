@@ -50,6 +50,10 @@ public class RtspCamera implements Serializable {
 	private Boolean isRtspPull;
 	
 	private String cameraRtspPath;
+	
+	private String aiRtspPath;
+	
+	private String motionRtspPath;
 
 	private String httpPath;
 	
