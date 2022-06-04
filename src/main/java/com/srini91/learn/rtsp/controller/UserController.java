@@ -10,6 +10,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,7 +54,7 @@ public class UserController extends ExceptionController {
 		
 	}
 
-	@PostMapping("/pwd/update")
+	@PutMapping("/pwd/update")
 	public UserDTO updatePwd(@RequestBody UserDTO user, Principal pUser) {
 		RtspUserDetails userDetails = (RtspUserDetails)((Authentication) pUser).getPrincipal();
 		return userServ.updateUser(user,userDetails);
